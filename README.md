@@ -1,4 +1,5 @@
 # seniorProject
+This is my senior project for Fall 2018, in which I test out two different SQL injection test tools against a purposefully buggy third-party site.
 
 Here are several links to the resources used within this project.
 
